@@ -1,8 +1,9 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, response, Response } from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
 import http from "http";
+import harperSaveMessage from "./services/harperSaveMessage";
 
 dotenv.config();
 
@@ -33,8 +34,6 @@ let chatRoom = "";
 const allUsers: allUsersType[] = [];
 
 io.on("connection", (socket) => {
-  console.log(`[cs] connected, ${socket.id}`);
-
   socket.on("join_room", (data) => {
     const { username, room } = data;
     chatRoom = room;
@@ -59,6 +58,13 @@ io.on("connection", (socket) => {
       username: "Chat",
       currentTime,
     });
+  });
+  socket.on("send_message", (data: ClientToServerDataInterface) => {
+    const { message, username, room, createdTime } = data;
+    io.in(room).emit("receive_message", data);
+    harperSaveMessage({ message, username, room, createdTime })
+      ?.then((response) => console.log(`[cs] response`, response))
+      .catch((error) => console.log(`[cs] error`, error));
   });
 });
 

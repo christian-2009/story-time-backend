@@ -9,6 +9,7 @@ interface ServerToClientEvents {
 interface ClientToServerEvents {
   hello: () => void;
   join_room: (data: any) => void;
+  send_message: (data: ClientToServerDataInterface) => void;
 }
 
 interface InterServerEvents {
@@ -24,4 +25,11 @@ interface allUsersType {
   id: string;
   username: string;
   room: string;
+}
+
+interface ClientToServerDataInterface {
+  message: string;
+  username: string;
+  room: string;
+  createdTime: Date;
 }
