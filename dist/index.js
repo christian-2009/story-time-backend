@@ -9,6 +9,7 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const http_1 = __importDefault(require("http"));
 const harperSaveMessage_1 = __importDefault(require("./services/harperSaveMessage"));
+const harperGetMessages_1 = __importDefault(require("./services/harperGetMessages"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8000;
@@ -22,18 +23,23 @@ const io = new socket_io_1.Server(server, {
 //cors middleware
 app.use((0, cors_1.default)());
 app.get("/", (req, res) => {
-    res.send("Express + TypeScript Server");
+    res.send("Express + TypeScript Servers!");
 });
 let chatRoom = "";
 const allUsers = [];
 io.on("connection", (socket) => {
     socket.on("join_room", (data) => {
+        var _a;
         const { username, room } = data;
         chatRoom = room;
         allUsers.push({ id: socket.id, username, room });
         const chatRoomUsers = allUsers.filter((user) => user.room === room);
         socket.to(room).emit("chatroom_users", chatRoomUsers);
         socket.emit("chatroom_users", chatRoomUsers);
+        (_a = (0, harperGetMessages_1.default)(room)) === null || _a === void 0 ? void 0 : _a.then((last100messages) => {
+            console.log(`[cs] last100messages`, last100messages);
+            socket.emit("last_100_messages", last100messages);
+        }).catch((err) => console.log(`[cs] err`, err));
         socket.join(room);
         const currentTime = Date.now();
         socket.emit("receive_message", {
@@ -54,6 +60,6 @@ io.on("connection", (socket) => {
         (_a = (0, harperSaveMessage_1.default)({ message, username, room, createdTime })) === null || _a === void 0 ? void 0 : _a.then((response) => console.log(`[cs] response`, response)).catch((error) => console.log(`[cs] error`, error));
     });
 });
-server.listen(port, () => {
+app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

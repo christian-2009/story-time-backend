@@ -4,6 +4,7 @@ interface ServerToClientEvents {
   withAck: (d: string, callback: (e: number) => void) => void;
   receive_message: (arg: any) => void;
   chatroom_users: (arg: allUsersType[]) => void;
+  last_100_messages: (arg: any) => void;
 }
 
 interface ClientToServerEvents {

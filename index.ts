@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import http from "http";
 import harperSaveMessage from "./services/harperSaveMessage";
+import harperGetMessages from "./services/harperGetMessages";
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ const io = new Server<
 app.use(cors());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
+  res.send("Express + TypeScript Servers!");
 });
 
 let chatRoom = "";
@@ -42,6 +43,13 @@ io.on("connection", (socket) => {
 
     socket.to(room).emit("chatroom_users", chatRoomUsers);
     socket.emit("chatroom_users", chatRoomUsers);
+
+    harperGetMessages(room)
+      ?.then((last100messages) => {
+        console.log(`[cs] last100messages`, last100messages);
+        socket.emit("last_100_messages", last100messages);
+      })
+      .catch((err) => console.log(`[cs] err`, err));
 
     socket.join(room);
 
@@ -68,6 +76,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
