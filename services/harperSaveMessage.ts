@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ClientToServerDataInterface } from "../types";
 
 function harperSaveMessage({
   message,
