@@ -1,0 +1,11 @@
+{
+  "ignore": [".git", "node_modules", "dist"],
+  "exec": "yarn start",
+  "ext": "ts",
+
+  "events": {
+    "restart": "kill-port 4001",
+    "crash": "kill-port 4001"
+  },
+  "delay": "2000"
+}
