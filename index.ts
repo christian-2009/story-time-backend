@@ -42,10 +42,6 @@ app.get("/", (req: Request, res: Response) => {
 let chatRoom = "";
 const allUsers: allUsersType[] = [];
 
-harperGetMessages("123321")?.then((messages) =>
-  console.log(`[cs] messages`, messages)
-);
-
 io.on("connection", (socket) => {
   console.log(`[cs] User connected ${socket.id}`);
   socket.on("join_room", (data) => {
@@ -60,8 +56,6 @@ io.on("connection", (socket) => {
 
     harperGetMessages(room)
       ?.then((last100messages) => {
-        console.log(`[cs] last100messages`, last100messages);
-
         socket.emit("last_100_messages", last100messages);
       })
       .catch((err) => console.log(`[cs] err`, err));
