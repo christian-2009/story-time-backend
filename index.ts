@@ -3,6 +3,14 @@ import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
 import http from "http";
+import {
+  allUsersType,
+  ClientToServerDataInterface,
+  ClientToServerEvents,
+  InterServerEvents,
+  ServerToClientEvents,
+  SocketData,
+} from "./types";
 import harperSaveMessage from "./services/harperSaveMessage";
 import harperGetMessages from "./services/harperGetMessages";
 
@@ -35,8 +43,10 @@ let chatRoom = "";
 const allUsers: allUsersType[] = [];
 
 io.on("connection", (socket) => {
+  console.log(`[cs] User connected ${socket.id}`);
   socket.on("join_room", (data) => {
     const { username, room } = data;
+    console.log(`[cs] username, room`, username, room);
     chatRoom = room;
     allUsers.push({ id: socket.id, username, room });
     const chatRoomUsers = allUsers.filter((user) => user.room === room);
@@ -46,7 +56,6 @@ io.on("connection", (socket) => {
 
     harperGetMessages(room)
       ?.then((last100messages) => {
-        console.log(`[cs] last100messages`, last100messages);
         socket.emit("last_100_messages", last100messages);
       })
       .catch((err) => console.log(`[cs] err`, err));
@@ -70,12 +79,13 @@ io.on("connection", (socket) => {
   socket.on("send_message", (data: ClientToServerDataInterface) => {
     const { message, username, room, createdTime } = data;
     io.in(room).emit("receive_message", data);
+    console.log(`[cs] createdTime`, createdTime);
     harperSaveMessage({ message, username, room, createdTime })
       ?.then((response) => console.log(`[cs] response`, response))
       .catch((error) => console.log(`[cs] error`, error));
   });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

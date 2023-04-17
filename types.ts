@@ -1,4 +1,4 @@
-interface ServerToClientEvents {
+export interface ServerToClientEvents {
   noArg: () => void;
   basicEmit: (a: number, b: string, c: Buffer) => void;
   withAck: (d: string, callback: (e: number) => void) => void;
@@ -7,28 +7,28 @@ interface ServerToClientEvents {
   last_100_messages: (arg: any) => void;
 }
 
-interface ClientToServerEvents {
+export interface ClientToServerEvents {
   hello: () => void;
   join_room: (data: any) => void;
   send_message: (data: ClientToServerDataInterface) => void;
 }
 
-interface InterServerEvents {
+export interface InterServerEvents {
   ping: () => void;
 }
 
-interface SocketData {
+export interface SocketData {
   name: string;
   age: number;
 }
 
-interface allUsersType {
+export interface allUsersType {
   id: string;
   username: string;
   room: string;
 }
 
-interface ClientToServerDataInterface {
+export interface ClientToServerDataInterface {
   message: string;
   username: string;
   room: string;

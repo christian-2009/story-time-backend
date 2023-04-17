@@ -7,7 +7,7 @@ function harperGetMessages(room: string) {
 
   const data = JSON.stringify({
     operation: "sql",
-    sql: `SELECT * FROM story_time.messages WHERE room = '${room}' `,
+    sql: `SELECT * FROM story_time.messages WHERE room is '${room}'`,
   });
 
   const config = {
