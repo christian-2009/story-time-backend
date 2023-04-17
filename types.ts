@@ -11,6 +11,7 @@ export interface ClientToServerEvents {
   hello: () => void;
   join_room: (data: any) => void;
   send_message: (data: ClientToServerDataInterface) => void;
+  leave_room: (data: allUsersType) => void;
 }
 
 export interface InterServerEvents {
@@ -32,5 +33,5 @@ export interface ClientToServerDataInterface {
   message: string;
   username: string;
   room: string;
-  createdTime: Date;
+  __createdtime__: Date;
 }

@@ -5,7 +5,7 @@ function harperSaveMessage({
   message,
   username,
   room,
-  createdTime,
+  __createdtime__,
 }: ClientToServerDataInterface) {
   const dbUrl = process.env.HARPERDB_URL;
   const dbPw = process.env.HARPERDB_PW;
@@ -18,7 +18,7 @@ function harperSaveMessage({
     operation: "insert",
     schema: "story_time",
     table: "messages",
-    records: [{ message, username, room, createdTime }],
+    records: [{ message, username, room, __createdtime__ }],
   });
 
   const config = {

@@ -13,6 +13,7 @@ import {
 } from "./types";
 import harperSaveMessage from "./services/harperSaveMessage";
 import harperGetMessages from "./services/harperGetMessages";
+import leaveRoom from "./services/leaveRoom";
 
 dotenv.config();
 
@@ -35,12 +36,21 @@ const io = new Server<
 //cors middleware
 app.use(cors());
 
+const CHAT_BOT = "ChatBot";
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Servers!");
 });
 
 let chatRoom = "";
-const allUsers: allUsersType[] = [];
+let allUsers: allUsersType[] = [];
+
+console.log(
+  `[cs] harperGetMessages(123321)`,
+  harperGetMessages("room123")?.then((messages) => {
+    console.log(`[cs] messages`, messages);
+  })
+);
 
 io.on("connection", (socket) => {
   console.log(`[cs] User connected ${socket.id}`);
@@ -56,6 +66,7 @@ io.on("connection", (socket) => {
 
     harperGetMessages(room)
       ?.then((last100messages) => {
+        console.log(`[cs] last100messages`, last100messages);
         socket.emit("last_100_messages", last100messages);
       })
       .catch((err) => console.log(`[cs] err`, err));
@@ -66,23 +77,34 @@ io.on("connection", (socket) => {
 
     socket.emit("receive_message", {
       message: `Welcome ${username}`,
-      username: "Chat",
+      username: CHAT_BOT,
       currentTime,
     });
 
     socket.to(room).emit("receive_message", {
       message: `${username} has joined the room`,
-      username: "Chat",
+      username: CHAT_BOT,
       currentTime,
     });
   });
   socket.on("send_message", (data: ClientToServerDataInterface) => {
-    const { message, username, room, createdTime } = data;
+    const { message, username, room, __createdtime__ } = data;
     io.in(room).emit("receive_message", data);
-    console.log(`[cs] createdTime`, createdTime);
-    harperSaveMessage({ message, username, room, createdTime })
+    harperSaveMessage({ message, username, room, __createdtime__ })
       ?.then((response) => console.log(`[cs] response`, response))
       .catch((error) => console.log(`[cs] error`, error));
+  });
+
+  socket.on("leave_room", (data) => {
+    const { username, room } = data;
+    socket.leave(room);
+    const __createdtime__ = Date.now();
+    allUsers = leaveRoom(socket.id, allUsers);
+    socket.to(room).emit("receive_message", {
+      message: `${username} has left the room`,
+      username: CHAT_BOT,
+      __createdtime__,
+    });
   });
 });
 
