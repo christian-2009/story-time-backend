@@ -28,10 +28,7 @@ const io = new Server<
   SocketData
 >(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "https://story-time-christian.netlify.app",
-    ],
+    origin: ["*"],
     credentials: true,
     methods: ["GET", "POST"],
   },
