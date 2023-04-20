@@ -2,7 +2,7 @@ import express, { Express, Request, response, Response } from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
-import https from "http";
+import http from "http";
 import {
   allUsersType,
   ClientToServerDataInterface,
@@ -18,8 +18,9 @@ import leaveRoom from "./services/leaveRoom";
 dotenv.config();
 
 const app: Express = express();
+app.use(cors());
 const port = process.env.PORT || 8000;
-const server = https.createServer(app);
+const server = http.createServer(app);
 
 const io = new Server<
   ClientToServerEvents,
@@ -35,7 +36,6 @@ const io = new Server<
 });
 
 //cors middleware
-app.use(cors());
 
 const CHAT_BOT = "ChatBot";
 
@@ -45,13 +45,6 @@ app.get("/", (req: Request, res: Response) => {
 
 let chatRoom = "";
 let allUsers: allUsersType[] = [];
-
-console.log(
-  `[cs] harperGetMessages(123321)`,
-  harperGetMessages("room123")?.then((messages) => {
-    console.log(`[cs] messages`, messages);
-  })
-);
 
 io.on("connection", (socket) => {
   console.log(`[cs] User connected ${socket.id}`);
