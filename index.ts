@@ -2,7 +2,7 @@ import express, { Express, Request, response, Response } from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 import dotenv from "dotenv";
-import http from "http";
+import https from "http";
 import {
   allUsersType,
   ClientToServerDataInterface,
@@ -19,7 +19,7 @@ dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 8000;
-const server = http.createServer(app);
+const server = https.createServer(app);
 
 const io = new Server<
   ClientToServerEvents,
