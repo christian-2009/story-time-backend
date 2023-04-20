@@ -32,6 +32,7 @@ const io = new Server<
       "http://localhost:3000",
       "https://story-time-christian.netlify.app",
     ],
+    credentials: true,
     methods: ["GET", "POST"],
   },
 });
