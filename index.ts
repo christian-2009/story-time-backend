@@ -20,7 +20,7 @@ dotenv.config();
 const app: Express = express();
 app.use(cors());
 const port = process.env.PORT || 8000;
-const server = http.createServer(app);
+const server = http.createServer(app).listen(port);
 
 const io = new Server<
   ClientToServerEvents,
@@ -35,6 +35,7 @@ const io = new Server<
     methods: ["GET", "POST"],
   },
 });
+// io.attach(server);
 
 //cors middleware
 
@@ -107,6 +108,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+// server.listen(port, () => {
+//   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+// });
