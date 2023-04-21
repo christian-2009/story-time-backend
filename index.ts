@@ -28,6 +28,7 @@ const io = new Server<
   InterServerEvents,
   SocketData
 >(server, {
+  allowEIO3: true,
   perMessageDeflate: false,
   cors: {
     origin: "*:*",
