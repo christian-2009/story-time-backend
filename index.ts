@@ -46,7 +46,7 @@ app.get("/", (req: Request, res: Response) => {
 let chatRoom = "";
 let allUsers: allUsersType[] = [];
 
-io.on("connect", (socket) => {
+io.on("connection", (socket) => {
   console.log(`[cs] User connected ${socket.id}`);
   socket.on("join_room", (data) => {
     const { username, room } = data;
