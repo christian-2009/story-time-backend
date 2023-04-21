@@ -30,8 +30,7 @@ const io = new Server<
 >(server, {
   perMessageDeflate: false,
   cors: {
-    origin: ["*"],
-    credentials: true,
+    origin: "*:*",
     methods: ["GET", "POST"],
   },
 });
