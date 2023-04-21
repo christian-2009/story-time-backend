@@ -48,6 +48,10 @@ let allUsers: allUsersType[] = [];
 
 io.on("connection", (socket) => {
   console.log(`[cs] User connected ${socket.id}`);
+
+  socket.on("connect_error", (err) => {
+    throw err;
+  });
   socket.on("join_room", (data) => {
     const { username, room } = data;
     console.log(`[cs] username, room`, username, room);

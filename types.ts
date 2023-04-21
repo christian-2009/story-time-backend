@@ -12,6 +12,7 @@ export interface ClientToServerEvents {
   join_room: (data: any) => void;
   send_message: (data: ClientToServerDataInterface) => void;
   leave_room: (data: allUsersType) => void;
+  connect_error: (arg: any) => void;
 }
 
 export interface InterServerEvents {
