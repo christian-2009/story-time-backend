@@ -27,16 +27,14 @@ const io = new Server<
   ServerToClientEvents,
   InterServerEvents,
   SocketData
->(
-  server
-  //   {
-  //   cors: {
-  //     origin: ["*"],
-  //     credentials: true,
-  //     methods: ["GET", "POST"],
-  //   },
-  // }
-);
+>(server, {
+  perMessageDeflate: false,
+  cors: {
+    origin: ["*"],
+    credentials: true,
+    methods: ["GET", "POST"],
+  },
+});
 
 //cors middleware
 
