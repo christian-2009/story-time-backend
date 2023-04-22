@@ -20,7 +20,7 @@ dotenv.config();
 const app: Express = express();
 app.use(cors());
 const port = process.env.PORT || 8000;
-const server = http.createServer(app).listen(port);
+const server = http.createServer(app);
 
 const io = new Server<
   ClientToServerEvents,
