@@ -18,7 +18,7 @@ import leaveRoom from "./services/leaveRoom";
 dotenv.config();
 
 const app: Express = express();
-app.use(cors());
+// app.use(cors());
 const port = process.env.PORT || 8000;
 const server = http.createServer(app).listen(port);
 
@@ -30,7 +30,7 @@ const io = new Server<
 >(server, {
   // allowEIO3: true,
   cors: {
-    origin: "*:*",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
