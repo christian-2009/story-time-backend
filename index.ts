@@ -14,6 +14,7 @@ import {
 import harperSaveMessage from "./services/harperSaveMessage";
 import harperGetMessages from "./services/harperGetMessages";
 import leaveRoom from "./services/leaveRoom";
+import harperCheckRoomExists from "./services/harperCheckRoomExists";
 
 dotenv.config();
 
@@ -52,7 +53,17 @@ io.on("connection", (socket) => {
   });
   socket.on("join_room", (data) => {
     const { username, room } = data;
-    console.log(`[cs] username, room`, username, room);
+
+    const roomExists = harperCheckRoomExists({ room: "room2" }).then(
+      (res) => res
+    );
+
+    if (!roomExists) {
+      return;
+    } else {
+      //checkPasswordIsCorrect
+    }
+
     chatRoom = room;
     allUsers.push({ id: socket.id, username, room });
     const chatRoomUsers = allUsers.filter((user) => user.room === room);
@@ -62,7 +73,6 @@ io.on("connection", (socket) => {
 
     harperGetMessages(room)
       ?.then((last100messages) => {
-        console.log(`[cs] last100messages`, last100messages);
         socket.emit("last_100_messages", last100messages);
       })
       .catch((err) => console.log(`[cs] err`, err));
