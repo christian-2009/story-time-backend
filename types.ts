@@ -36,3 +36,10 @@ export interface ClientToServerDataInterface {
   room: string;
   __createdtime__: Date;
 }
+
+export interface Rooms {
+  room: string;
+  password: string;
+  __createdtime__: number;
+  __updatedtime__: number;
+}
