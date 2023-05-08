@@ -15,6 +15,7 @@ import harperSaveMessage from "./services/harperSaveMessage";
 import harperGetMessages from "./services/harperGetMessages";
 import leaveRoom from "./services/leaveRoom";
 import harperCheckRoomExists from "./services/harperCheckRoomExists";
+import harperHandleTable from "./services/harperHandleTable";
 
 dotenv.config();
 
@@ -51,17 +52,17 @@ io.on("connection", (socket) => {
   socket.on("connect_error", (err) => {
     throw err;
   });
-  socket.on("join_room", (data) => {
-    const { username, room } = data;
+  socket.on("join_room", async (data) => {
+    const { username, room, password } = data;
 
-    const roomExists = harperCheckRoomExists({ room: "room2" }).then(
-      (res) => res
-    );
-
-    if (!roomExists) {
-      return;
-    } else {
-      //checkPasswordIsCorrect
+    // const handleTable = await harperHandleTable({
+    //   room: "room1",
+    //   password: "12321",
+    // });
+    try {
+      await harperHandleTable({ room, password });
+    } catch (e) {
+      throw e;
     }
 
     chatRoom = room;

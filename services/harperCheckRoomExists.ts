@@ -29,7 +29,6 @@ async function harperCheckRoomExists({ room }: Props) {
   try {
     const res = await axios(config);
     roomInfo = await res.data;
-    console.log(`[cs] res`, res.data);
   } catch (e) {
     throw e;
   }
