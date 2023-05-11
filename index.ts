@@ -55,13 +55,10 @@ io.on("connection", (socket) => {
   socket.on("join_room", async (data) => {
     const { username, room, password } = data;
 
-    // const handleTable = await harperHandleTable({
-    //   room: "room1",
-    //   password: "12321",
-    // });
     try {
       await harperHandleTable({ room, password });
-    } catch (e) {
+    } catch (e: any) {
+      io.in(socket.id).emit("error", e.message);
       throw e;
     }
 

@@ -5,6 +5,7 @@ export interface ServerToClientEvents {
   receive_message: (arg: any) => void;
   chatroom_users: (arg: allUsersType[]) => void;
   last_100_messages: (arg: any) => void;
+  error: (e: string) => void;
 }
 
 export interface ClientToServerEvents {
