@@ -61,7 +61,6 @@ let allUsers: allUsersType[] = [];
 
 io.on("connection", socket => {
     console.log(`[cs] User connected ${socket.id}`);
-
     socket.on("connect_error", err => {
         throw err;
     });
@@ -71,6 +70,8 @@ io.on("connection", socket => {
         chatRoom = room;
         allUsers.push({ id: socket.id, username, room });
         const chatRoomUsers = allUsers.filter(user => user.room === room);
+
+        console.log("chatRoomUsers", chatRoomUsers);
 
         socket.to(room).emit("chatroom_users", chatRoomUsers);
         socket.emit("chatroom_users", chatRoomUsers);
@@ -96,6 +97,19 @@ io.on("connection", socket => {
             username: CHAT_BOT,
             currentTime,
         });
+
+        if (chatRoomUsers.length >= 2) {
+            socket.emit("receive_message", {
+                message: `Beginning the timer`,
+                username: CHAT_BOT,
+                currentTime,
+            });
+
+            io.in(room).emit("timer", {
+                startTimer: true,
+                delay: 5000,
+            });
+        }
     });
     socket.on("send_message", (data: ClientToServerDataInterface) => {
         const { message, username, room, __createdtime__ } = data;
